@@ -61,7 +61,7 @@ then
     vgcreate "$HOSTNAME"-iscsi /dev/md0
     lvcreate -l 100%FREE --name "$HOSTNAME"-lun "$HOSTNAME"-iscsi
     cat target.conf > "$TARGET_CONF_PATH"
-    sed -i "s#HOSTNAME#$HOSTNAME#" "$TARGET_CONF_PATH"
+    sed -i "s#HOSTNAME#$HOSTNAME#g" "$TARGET_CONF_PATH"
     service tgt restart
 fi
 
