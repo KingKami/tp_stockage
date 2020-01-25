@@ -97,6 +97,7 @@ then
         iscsiadm -m discovery -t st -p "$IP"
         cat default.conf > "$PATH"
         sed -i "s#TARGETNAME#$NAME#" "$PATH"
+        sed - "s#TARGET-IP#$IP#" "$PATH"
     done
 
     mdadm --create /dev/md1 --level=5 --raid-devices=4 /dev/sd[d-f] --run
