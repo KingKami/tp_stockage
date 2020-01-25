@@ -13,11 +13,8 @@ GATEWAY="172.180.1.2"
 
 apt-get -qq install tgt lvm2 xfsprogs ntfs-3g mdadm open-iscsi
 
-if [ "$HOSTNAME" = "machine1" ] || [ "$HOSTNAME" = "machine2" ] || [ "$HOSTNAME" = "machine3" ] ; \
-then {
-
+if [ "$HOSTNAME" = "machine1" ] || [ "$HOSTNAME" = "machine2" ] || [ "$HOSTNAME" = "machine3" ] ; then {
     TARGET_CONF_PATH="/etc/tgt/conf.d/${HOSTNAME}-iscsi.conf"
-
     if [ -f /dev/sdb ] ; then {
         sfdisk /dev/sdb < sfdisk-50mb.dump
     }
@@ -30,7 +27,6 @@ then {
     if [ -f /dev/sde ] ; then {
         sfdisk /dev/sde < sfdisk-50mb.dump
     }
-
     if [ "$HOSTNAME" = "machine1" ] ; then {
         sed -i "s#dhcp#static\n\
         \taddress ${IP_MACHINE[0]}\n\
@@ -52,9 +48,7 @@ then {
         \tgateway ${GATEWAY}#" \
         "$NETWORK_CONF_FILE_PATH"
     }
-
     service networking restart
-
     mdadm --create /dev/md0 --level=10 --raid-devices=4 /dev/sd[b-e]1 --run
     pvcreate /dev/md0
     vgcreate "$HOSTNAME"-iscsi /dev/md0
