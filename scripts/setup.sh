@@ -38,30 +38,30 @@ then
         echo -e "\nauto ens33\niface ens33 inet static\n\
         \taddress ${IP_MACHINE[0]}\n\
         \tnetmask ${NETMASK}\n\
-        \tgateway ${GATEWAY}" >> "$NETWORK_CONF_FILE_PATH"
+        \tgateway ${GATEWAY}" >> "${NETWORK_CONF_FILE_PATH}"
     fi
 
     if [ "$HOSTNAME" = "machine2" ] ; then
         echo -e "auto ens33\niface ens33 inet static\n\
         \taddress ${IP_MACHINE[1]}\n\
         \tnetmask ${NETMASK}\n\
-        \tgateway ${GATEWAY}" >> "$NETWORK_CONF_FILE_PATH"
+        \tgateway ${GATEWAY}" >> "${NETWORK_CONF_FILE_PATH}"
     fi
 
     if [ "$HOSTNAME" = "machine3" ] ; then
         echo -e "auto ens33\niface ens33 inet static\n\
         \taddress ${IP_MACHINE[2]}\n\
         \tnetmask ${NETMASK}\n\
-        \tgateway ${GATEWAY}" >> "$NETWORK_CONF_FILE_PATH"
+        \tgateway ${GATEWAY}" >> "${NETWORK_CONF_FILE_PATH}"
     fi
 
     service networking restart
     mdadm --create /dev/md0 --level=10 --raid-devices=4 /dev/sd[b-e] --run
     pvcreate /dev/md0
-    vgcreate "$HOSTNAME"-iscsi /dev/md0
-    lvcreate -l 100%FREE --name "$HOSTNAME"-lun "$HOSTNAME"-iscsi
-    cat target.conf > "$TARGET_CONF_PATH"
-    sed -i "s#HOSTNAME#$HOSTNAME#g" "$TARGET_CONF_PATH"
+    vgcreate "${HOSTNAME}-iscsi" /dev/md0
+    lvcreate -l 100%FREE --name "${HOSTNAME}-lun" "${HOSTNAME}-iscsi"
+    cat target.conf > "${TARGET_CONF_PATH}"
+    sed -i "s#HOSTNAME#$HOSTNAME#g" "${TARGET_CONF_PATH}"
     service tgt restart
 fi
 
@@ -82,7 +82,7 @@ then
     echo -e "auto ens33\niface ens33 inet static\n\
     \taddress ${IP_MACHINE[3]}\n
     \tnetmask ${NETMASK}\n
-    \tgateway ${GATEWAY}" >> "$NETWORK_CONF_FILE_PATH"
+    \tgateway ${GATEWAY}" >> "${NETWORK_CONF_FILE_PATH}"
 
     service networking restart
 
@@ -94,28 +94,28 @@ then
         NAME="machine${machine}"
         PATH="/etc/iscsi/nodes/iqn.2020-01.com.karthike\:${NAME}-lun/${IP}\,3260\,1/default"
 
-        iscsiadm -m discovery -t st -p "$IP"
-        cat default.conf > "$PATH"
-        sed -i "s#TARGETNAME#$NAME#" "$PATH"
-        sed - "s#TARGET-IP#$IP#" "$PATH"
+        iscsiadm -m discovery -t st -p "$I{P"
+        cat default.conf > "${PATH}"
+        sed -i "s#TARGETNAME#$NAME#" "${PATH}"
+        sed - "s#TARGET-IP#${IP}#" "${PATH}"
     done
 
     mdadm --create /dev/md1 --level=5 --raid-devices=4 /dev/sd[d-f] --run
-    vgcreate "$VGNAME" /dev/md0 /dev/md1
+    vgcreate "${VGNAME}" /dev/md0 /dev/md1
 
-    lvcreate -n LV-XFS -L ${XFS_SIZE}‬%FREE "$VGNAME"
+    lvcreate -n LV-XFS -L ${XFS_SIZE}‬%FREE "${VGNAME}"
     mkfs -t xfs LV-XFS
 
-    lvcreate -n LV-EXT4 -L ${EXT4_SIZE}‬%FREE "$VGNAME"
+    lvcreate -n LV-EXT4 -L ${EXT4_SIZE}‬%FREE "${VGNAME}"
     mkfs -t ext4 LV-EXT4
 
-    lvcreate -n LV-NTFS -L 100%FREE "$VGNAME"
+    lvcreate -n LV-NTFS -L 100%FREE "${VGNAME}"
     mkfs -t ntfs LV-NTFS
 
     mkdir -p /mnt/xfs-partition /mnt/ext4-partition /mnt/ntfs-partition
     mount LV-XFS /mnt/xfs-partition
     mount LV-EXT4 /mnt/ext4-partition
-    mount LV-NTFS /mnt/NTFS-partition
+    mount LV-NTFS /mnt/ntfs-partition
 
     mdadm --detail --scan --verbose >> /etc/mdadm/mdadm.conf
     update-initramfs -u
