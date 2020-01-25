@@ -120,11 +120,11 @@ then
 
     mdadm --create /dev/md0 --level=1 --raid-devices=2 /dev/sd[b-c] --run
 
-    for machine in {1..5}
+    for MACHINE in {0..2}
     do
-        INDEX=$(echo "${machine}-1" |bc)
-        IP="${IP_MACHINE[${INDEX}]}"
-        NAME="machine${machine}"
+        INDEX=$(($MACHINE+1))
+        IP="${IP_MACHINE[$MACHINE]}"
+        NAME="machine${INDEX}"
         PATH="/etc/iscsi/nodes/iqn.2020-01.com.karthike\:${NAME}-lun/${IP}\,3260\,1/default"
 
         iscsiadm -m discovery -t st -p "${IP}"
