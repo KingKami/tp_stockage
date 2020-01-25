@@ -88,10 +88,10 @@ then
 
     mdadm --create /dev/md0 --level=1 --raid-devices=2 /dev/sd[b-c] --run
 
-    for ((machine=1;i<=3;i++));
+    for ((machine=1;machine<=3;machine++));
     do
-        IP="${IP_MACHINE[machine-1]}"
-        NAME="machine${machine}"
+        IP="${IP_MACHINE[$(echo "${machine}-1"|bc)]}"
+        NAME="machine${$machine}"
         PATH="/etc/iscsi/nodes/iqn.2020-01.com.karthike\:${NAME}-lun/${IP}\,3260\,1/default"
 
         iscsiadm -m discovery -t st -p "${IP}"
