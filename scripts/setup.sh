@@ -125,13 +125,15 @@ then
         INDEX=$(($MACHINE+1))
         IP="${IP_MACHINE[$MACHINE]}"
         NAME="machine${INDEX}"
-        PATH="/etc/iscsi/nodes/iqn.2020-01.com.karthike\:${NAME}-lun/${IP}\,3260\,1/default"
+        PATH="/etc/iscsi/nodes/iqn.2020-01.com.karthike\:${NAME}-lun/${IP}\,3260\,1/"
 
-        $(iscsiadm -m discovery -t st -p "${IP}")
-        cat default.conf > "${PATH}"
-        sed -i "s#TARGETNAME#$NAME#" "${PATH}"
-        sed -i "s#TARGET-IP#${IP}#" "${PATH}"
+        # $(iscsiadm -m discovery -t st -p "${IP}")
+        mkdir -p "${PATH}"
+        cat default.conf > "${PATH}default"
+        sed -i "s#TARGETNAME#$NAME#" "${PATH}default"
+        sed -i "s#TARGET-IP#${IP}#" "${PATH}default"
     done
+    service open-iscsi restart
 
     mdadm --create /dev/md1 --level=5 --raid-devices=3 /dev/sd[d-f] --run
 
