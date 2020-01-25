@@ -35,7 +35,7 @@ then
     fi
 
     if [ "$HOSTNAME" = "machine1" ] ; then
-        echo "auto ens33\n\
+        echo -e "auto ens33\n\
         iface ens33 inet static\n\
         \taddress ${IP_MACHINE[0]}\n\
         \tnetmask ${NETMASK}\n\
@@ -43,7 +43,7 @@ then
     fi
 
     if [ "$HOSTNAME" = "machine2" ] ; then
-        echo "auto ens33\n\
+        echo -e "auto ens33\n\
         iface ens33 inet static\n\
         \taddress ${IP_MACHINE[1]}\n\
         \tnetmask ${NETMASK}\n\
@@ -51,7 +51,7 @@ then
     fi
 
     if [ "$HOSTNAME" = "machine3" ] ; then
-        echo "auto ens33\n\
+        echo -e "auto ens33\n\
         iface ens33 inet static\n\
         \taddress ${IP_MACHINE[2]}\n\
         \tnetmask ${NETMASK}\n\
@@ -82,7 +82,7 @@ then
         sfdisk /dev/sdc < sfdisk-100mb.dump
     fi
 
-    echo "auto ens33\n\
+    echo -e "auto ens33\n\
     iface ens33 inet static\n\
     \taddress ${IP_MACHINE[3]}\n
     \tnetmask ${NETMASK}\n
