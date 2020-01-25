@@ -80,8 +80,8 @@ then
     fi
 
     echo -e "auto ens33\niface ens33 inet static\n\
-    \taddress ${IP_MACHINE[3]}\n
-    \tnetmask ${NETMASK}\n
+    \taddress ${IP_MACHINE[3]}\n\
+    \tnetmask ${NETMASK}\n\
     \tgateway ${GATEWAY}" >> "${NETWORK_CONF_FILE_PATH}"
 
     service networking restart
