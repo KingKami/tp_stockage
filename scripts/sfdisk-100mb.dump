@@ -1,0 +1,8 @@
+label: gpt
+label-id: 08D5A0F4-DE68-4A45-B6F5-E5DF36B180DE
+device: /dev/sda
+unit: sectors
+first-lba: 2048
+last-lba: 208862
+
+/dev/sda1 : start=        2048, size=      206815, type=0FC63DAF-8483-4772-8E79-3D69D8477DE4, uuid=A94DD131-3F09-B445-8403-A01D28342025
