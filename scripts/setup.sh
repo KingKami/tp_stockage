@@ -127,10 +127,10 @@ then
         NAME="machine${INDEX}"
         PATH="/etc/iscsi/nodes/iqn.2020-01.com.karthike\:${NAME}-lun/${IP}\,3260\,1/default"
 
-        iscsiadm -m discovery -t st -p "${IP}"
+        $(iscsiadm -m discovery -t st -p "${IP}")
         cat default.conf > "${PATH}"
         sed -i "s#TARGETNAME#$NAME#" "${PATH}"
-        sed - "s#TARGET-IP#${IP}#" "${PATH}"
+        sed -i "s#TARGET-IP#${IP}#" "${PATH}"
     done
 
     mdadm --create /dev/md1 --level=5 --raid-devices=3 /dev/sd[d-f] --run
