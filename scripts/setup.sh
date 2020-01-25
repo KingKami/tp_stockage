@@ -13,41 +13,41 @@ GATEWAY="172.180.1.2"
 
 apt-get -qq install tgt lvm2 xfsprogs ntfs-3g mdadm open-iscsi
 
-if [ "$HOSTNAME" = "machine1" ] || [ "$HOSTNAME" = "machine2" ] || [ "$HOSTNAME" = "machine3" ] ; then {
+if [ "$HOSTNAME" = "machine1" ] || [ "$HOSTNAME" = "machine2" ] || [ "$HOSTNAME" = "machine3" ] ; then
     TARGET_CONF_PATH="/etc/tgt/conf.d/${HOSTNAME}-iscsi.conf"
-    if [ -f /dev/sdb ] ; then {
+    if [ -f /dev/sdb ] ; then
         sfdisk /dev/sdb < sfdisk-50mb.dump
-    }
-    if [ -f /dev/sdc ] ; then {
+    fi
+    if [ -f /dev/sdc ] ; then
         sfdisk /dev/sdc < sfdisk-50mb.dump
-    }
-    if [ -f /dev/sdd ] ; then {
+    fi
+    if [ -f /dev/sdd ] ; then
         sfdisk /dev/sdd < sfdisk-50mb.dump
-    }
-    if [ -f /dev/sde ] ; then {
+    fi
+    if [ -f /dev/sde ] ; then
         sfdisk /dev/sde < sfdisk-50mb.dump
-    }
-    if [ "$HOSTNAME" = "machine1" ] ; then {
+    fi
+    if [ "$HOSTNAME" = "machine1" ] ; then
         sed -i "s#dhcp#static\n\
         \taddress ${IP_MACHINE[0]}\n\
         \tnetmask ${NETMASK}\n\
         \tgateway ${GATEWAY}#" \
         "$NETWORK_CONF_FILE_PATH"
-    }
-    if [ "$HOSTNAME" = "machine2" ] ; then {
+    fi
+    if [ "$HOSTNAME" = "machine2" ] ; then
         sed -i "s#dhcp#static\n\
         \taddress ${IP_MACHINE[1]}\n\
         \tnetmask ${NETMASK}\n\
         \tgateway ${GATEWAY}#" \
         "$NETWORK_CONF_FILE_PATH"
-    }
-    if [ "$HOSTNAME" = "machine3" ] ; then {
+    fi
+    if [ "$HOSTNAME" = "machine3" ] ; then
         sed -i "s#dhcp#static\n\
         \taddress ${IP_MACHINE[2]}\n\
         \tnetmask ${NETMASK}\n\
         \tgateway ${GATEWAY}#" \
         "$NETWORK_CONF_FILE_PATH"
-    }
+    fi
     service networking restart
     mdadm --create /dev/md0 --level=10 --raid-devices=4 /dev/sd[b-e]1 --run
     pvcreate /dev/md0
@@ -56,20 +56,20 @@ if [ "$HOSTNAME" = "machine1" ] || [ "$HOSTNAME" = "machine2" ] || [ "$HOSTNAME"
     cat target.conf > "$TARGET_CONF_PATH"
     sed -i "s#HOSTNAME#$HOSTNAME#" "$TARGET_CONF_PATH"
     service tgt restart
-}
+fi
 
-if [ "$HOSTNAME" = "machine4" ] ; then {
+if [ "$HOSTNAME" = "machine4" ] ; then
 
     VGNAME="karthike"
     XFS_SIZE=$(echo "200*100/350" |bc -l)
     EXT4_SIZE=$(echo "100*100/150" |bc -l)
 
-    if [ -f /dev/sdb ] ; then {
+    if [ -f /dev/sdb ] ; then
         sfdisk /dev/sdb < sfdisk-100mb.dump
-    }
-    if [ -f /dev/sdc ] ; then {
+    fi
+    if [ -f /dev/sdc ] ; then
         sfdisk /dev/sdc < sfdisk-100mb.dump
-    }
+    fi
 
     sed -i "s#dhcp#static\n\
     \taddress ${IP_MACHINE[3]}\n\
@@ -112,4 +112,4 @@ if [ "$HOSTNAME" = "machine4" ] ; then {
 
     mdadm --detail --scan --verbose >> /etc/mdadm/mdadm.conf
     update-initramfs -u
-}
+fi
