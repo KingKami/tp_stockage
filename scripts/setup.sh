@@ -128,10 +128,11 @@ then
         ISCSI_CONF_PATH="/etc/iscsi/nodes/iqn.2020-01.com.karthike:${NAME}-lun/${IP},3260,1/"
 
         iscsiadm -m discovery -t st -p "$IP"
-        # mkdir -p "$ISCSI_CONF_PATH"
-        cat default.conf > "${ISCSI_CONF_PATH}default"
-        sed -i "s#TARGETNAME#$NAME#" "${ISCSI_CONF_PATH}default"
-        sed -i "s#TARGET-IP#${IP}#" "${ISCSI_CONF_PATH}default"
+
+        sed -i "s#node.session.auth.authmethod = None#node.session.auth.authmethod = CHAP#" "${ISCSI_CONF_PATH}default"
+        sed -i "s#manual#automatic#g" "${ISCSI_CONF_PATH}default"
+        sed -i "s/# END RECORD/node.session.auth.username = machine4/" "${ISCSI_CONF_PATH}default"
+        echo -e "node.session.auth.password = password\nnode.session.auth.username_in = ${NAME}\nnode.session.auth.password_in = secretpass\n# END RECORD" >> "${ISCSI_CONF_PATH}default"
     done
     service open-iscsi restart
 
