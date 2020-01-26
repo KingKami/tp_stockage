@@ -92,8 +92,8 @@ fi
 if [ "$HOSTNAME" = "machine4" ] ; \
 then
     VGNAME="karthike"
-    XFS_SIZE=$(echo "200*100/350" |bc -l)
-    EXT4_SIZE=$(echo "100*100/150" |bc -l)
+    XFS_SIZE=$(echo "200*100/350" |bc)
+    EXT4_SIZE=$(echo "100*100/150" |bc)
 
     if [ -f /dev/sdb ] ; then
         sfdisk /dev/sdb < sfdisk-100mb.dump
