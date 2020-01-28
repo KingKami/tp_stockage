@@ -13,73 +13,27 @@ GATEWAY="172.180.1.2"
 
 apt-get -qq install tgt lvm2 xfsprogs ntfs-3g mdadm open-iscsi
 
+if [ -f /dev/sdb ] ; then
+    sfdisk /dev/sdb < sfdisk-100mb.dump
+fi
+
+if [ -f /dev/sdc ] ; then
+    sfdisk /dev/sdc < sfdisk-100mb.dump
+fi
+
+if [ -f /dev/sdd ] ; then
+    sfdisk /dev/sdd < sfdisk-100mb.dump
+fi
+
+if [ -f /dev/sde ] ; then
+    sfdisk /dev/sde < sfdisk-100mb.dump
+fi
+
 if [ "$HOSTNAME" = "machine1" ] || [ "$HOSTNAME" = "machine2" ] || [ "$HOSTNAME" = "machine3" ] ; \
 then
 
     TARGET_CONF_PATH="/etc/tgt/conf.d/${HOSTNAME}-iscsi.conf"
 
-    if [ -f /dev/sdb ] ; then
-        sfdisk /dev/sdb < sfdisk-50mb.dump
-    fi
-
-    if [ -f /dev/sdc ] ; then
-        sfdisk /dev/sdc < sfdisk-50mb.dump
-    fi
-
-    if [ -f /dev/sdd ] ; then
-        sfdisk /dev/sdd < sfdisk-50mb.dump
-    fi
-
-    if [ -f /dev/sde ] ; then
-        sfdisk /dev/sde < sfdisk-50mb.dump
-    fi
-
-    if [ "$HOSTNAME" = "machine1" ] ; then
-        if grep -q ens33 "$NETWORK_CONF_FILE_PATH"; then
-            sed -i "s#dhcp#static\n\
-            \taddress ${IP_MACHINE[0]}\n\
-            \tnetmask ${NETMASK}\n\
-            \tgateway ${GATEWAY}#" \
-            "$NETWORK_CONF_FILE_PATH"
-        else
-            echo -e "\nauto ens33\niface ens33 inet static\n\
-            \taddress ${IP_MACHINE[0]}\n\
-            \tnetmask ${NETMASK}\n\
-            \tgateway ${GATEWAY}" >> "${NETWORK_CONF_FILE_PATH}"
-        fi
-    fi
-
-    if [ "$HOSTNAME" = "machine2" ] ; then
-        if grep -q ens33 "$NETWORK_CONF_FILE_PATH"; then
-            sed -i "s#dhcp#static\n\
-            \taddress ${IP_MACHINE[1]}\n\
-            \tnetmask ${NETMASK}\n\
-            \tgateway ${GATEWAY}#" \
-            "$NETWORK_CONF_FILE_PATH"
-        else
-            echo -e "auto ens33\niface ens33 inet static\n\
-            \taddress ${IP_MACHINE[1]}\n\
-            \tnetmask ${NETMASK}\n\
-            \tgateway ${GATEWAY}" >> "${NETWORK_CONF_FILE_PATH}"
-        fi
-    fi
-
-    if [ "$HOSTNAME" = "machine3" ] ; then
-        if grep -q ens33 "$NETWORK_CONF_FILE_PATH"; then
-            sed -i "s#dhcp#static\n\
-            \taddress ${IP_MACHINE[2]}\n\
-            \tnetmask ${NETMASK}\n\
-            \tgateway ${GATEWAY}#" \
-            "$NETWORK_CONF_FILE_PATH"
-        else
-            echo -e "auto ens33\niface ens33 inet static\n\
-            \taddress ${IP_MACHINE[2]}\n\
-            \tnetmask ${NETMASK}\n\
-            \tgateway ${GATEWAY}" >> "${NETWORK_CONF_FILE_PATH}"
-        fi
-    fi
-
-    service networking restart
     mdadm --create /dev/md0 --level=10 --raid-devices=4 /dev/sd[b-e] --run
     pvcreate /dev/md0
     vgcreate "${HOSTNAME}-iscsi" /dev/md0
@@ -94,29 +48,6 @@ then
     VGNAME="karthike"
     XFS_SIZE=$(echo "200*100/350" |bc)
     EXT4_SIZE=$(echo "100*100/150" |bc)
-
-    if [ -f /dev/sdb ] ; then
-        sfdisk /dev/sdb < sfdisk-100mb.dump
-    fi
-
-    if [ -f /dev/sdc ] ; then
-        sfdisk /dev/sdc < sfdisk-100mb.dump
-    fi
-
-    if grep -q ens33 "$NETWORK_CONF_FILE_PATH"; then
-        sed -i "s#dhcp#static\n\
-        \taddress ${IP_MACHINE[3]}\n\
-        \tnetmask ${NETMASK}\n\
-        \tgateway ${GATEWAY}#" \
-        "$NETWORK_CONF_FILE_PATH"
-    else
-        echo -e "auto ens33\niface ens33 inet static\n\
-        \taddress ${IP_MACHINE[3]}\n\
-        \tnetmask ${NETMASK}\n\
-        \tgateway ${GATEWAY}" >> "${NETWORK_CONF_FILE_PATH}"
-    fi
-
-    service networking restart
 
     mdadm --create /dev/md0 --level=1 --raid-devices=2 /dev/sd[b-c] --run
 
