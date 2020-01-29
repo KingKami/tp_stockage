@@ -86,6 +86,7 @@ then
     mount LV-EXT4 /mnt/ext4-partition
     mount LV-NTFS /mnt/ntfs-partition
 
-    mdadm --detail --scan --verbose >> /etc/mdadm/mdadm.conf
-    update-initramfs -u
 fi
+
+mdadm --detail --scan >> /etc/mdadm/mdadm.conf
+update-initramfs -u
