@@ -52,9 +52,9 @@ then
 
     mdadm --create /dev/md0 --level=1 --raid-devices=2 /dev/sd[b-c] --run
 
-    for MACHINE in {0..2}
+    for MACHINE in {1..3}
     do
-        INDEX=$(($MACHINE+1))
+        INDEX=$(($MACHINE-1))
         IP="${IP_MACHINE[$MACHINE]}"
         NAME="machine${INDEX}"
         ISCSI_CONF_PATH="/etc/iscsi/nodes/iqn.2020-01.com.karthike:${NAME}-lun/${IP},3260,1/"
