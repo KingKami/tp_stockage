@@ -56,7 +56,7 @@ then
     do
         INDEX=$(($MACHINE-1))
         IP="${IP_MACHINE[$MACHINE]}"
-        NAME="machine${INDEX}"
+        NAME="machine${MACHINE}"
         ISCSI_CONF_PATH="/etc/iscsi/nodes/iqn.2020-01.com.karthike:${NAME}-lun/${IP},3260,1/"
 
         iscsiadm -m discovery -t st -p "$IP"
