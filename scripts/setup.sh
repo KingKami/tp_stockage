@@ -68,25 +68,25 @@ then
         service open-iscsi restart
     done
 
-    mdadm --create /dev/md1 --level=5 --raid-devices=3 /dev/sd[d-f] --run
+    # mdadm --create /dev/md1 --level=5 --raid-devices=3 /dev/sd[d-f] --run
 
-    vgcreate "${VGNAME}" /dev/md0 /dev/md1
+    # vgcreate "${VGNAME}" /dev/md0 /dev/md1
 
-    lvcreate -n LV-XFS -L "${XFS_SIZE}" "${VGNAME}"
-    mkfs -t xfs LV-XFS
+    # lvcreate -n LV-XFS -L "${XFS_SIZE}" "${VGNAME}"
+    # mkfs -t xfs LV-XFS
 
-    lvcreate -n LV-EXT4 -L "${EXT4_SIZE}" "${VGNAME}"
-    mkfs -t ext4 LV-EXT4
+    # lvcreate -n LV-EXT4 -L "${EXT4_SIZE}" "${VGNAME}"
+    # mkfs -t ext4 LV-EXT4
 
-    lvcreate -n LV-NTFS -L "${NTFS_SIZE}" "${VGNAME}"
-    mkfs -t ntfs LV-NTFS
+    # lvcreate -n LV-NTFS -L "${NTFS_SIZE}" "${VGNAME}"
+    # mkfs -t ntfs LV-NTFS
 
-    mkdir -p /mnt/xfs-partition /mnt/ext4-partition /mnt/ntfs-partition
-    mount LV-XFS /mnt/xfs-partition
-    mount LV-EXT4 /mnt/ext4-partition
-    mount LV-NTFS /mnt/ntfs-partition
+    # mkdir -p /mnt/xfs-partition /mnt/ext4-partition /mnt/ntfs-partition
+    # mount LV-XFS /mnt/xfs-partition
+    # mount LV-EXT4 /mnt/ext4-partition
+    # mount LV-NTFS /mnt/ntfs-partition
 
 fi
 
-mdadm --detail --scan >> /etc/mdadm/mdadm.conf
-update-initramfs -u
+# mdadm --detail --scan >> /etc/mdadm/mdadm.conf
+# update-initramfs -u
