@@ -73,13 +73,13 @@ then
     vgcreate "${VGNAME}" /dev/md0 /dev/md1
 
     lvcreate -n LV-XFS -L "${XFS_SIZE}" "${VGNAME}"
-    mkfs.xfs -d name=LV-XFS
+    mkfs -t xfs LV-XFS
 
     lvcreate -n LV-EXT4 -L "${EXT4_SIZE}" "${VGNAME}"
-    mkfs.ext4 -d name=LV-EXT4
+    mkfs -t ext4 LV-EXT4
 
     lvcreate -n LV-NTFS -L "${NTFS_SIZE}" "${VGNAME}"
-    mkfs.ntfs -d name=LV-NTFS
+    mkfs -t ntfs LV-NTFS
 
     mkdir -p /mnt/xfs-partition /mnt/ext4-partition /mnt/ntfs-partition
     mount LV-XFS /mnt/xfs-partition
