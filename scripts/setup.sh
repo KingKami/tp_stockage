@@ -37,7 +37,7 @@ then
     mdadm --create /dev/md0 --level=10 --raid-devices=4 /dev/sd[b-e] --run
     pvcreate /dev/md0
     vgcreate "${HOSTNAME}-iscsi" /dev/md0
-    lvcreate -l 100%FREE --name "${HOSTNAME}lun" "${HOSTNAME}iscsi"
+    lvcreate -l 100%FREE --name "${HOSTNAME}lun" "${HOSTNAME}-iscsi"
     cat target.conf > "${TARGET_CONF_PATH}"
     sed -i "s#HOSTNAME#$HOSTNAME#g" "${TARGET_CONF_PATH}"
     service tgt restart
