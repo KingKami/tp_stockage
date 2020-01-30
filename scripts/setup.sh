@@ -46,8 +46,9 @@ fi
 if [ "$HOSTNAME" = "machine4" ] ; \
 then
     VGNAME="karthike"
-    XFS_SIZE=$(echo "200*100/350" |bc)
-    EXT4_SIZE=$(echo "100*100/150" |bc)
+    XFS_SIZE=200
+    EXT4_SIZE=100
+    NTFS_SIZE=50
 
     mdadm --create /dev/md0 --level=1 --raid-devices=2 /dev/sd[b-c] --run
 
@@ -64,27 +65,29 @@ then
         sed -i "s#manual#automatic#g" "${ISCSI_CONF_PATH}default"
         sed -i "s/# END RECORD/node.session.auth.username = machine4/" "${ISCSI_CONF_PATH}default"
         echo -e "node.session.auth.password = password\nnode.session.auth.username_in = ${NAME}\nnode.session.auth.password_in = secretpass\n# END RECORD" >> "${ISCSI_CONF_PATH}default"
+        service open-iscsi restart
     done
-    service open-iscsi restart
 
     mdadm --create /dev/md1 --level=5 --raid-devices=3 /dev/sd[d-f] --run
 
+    pvcreate /dev/md0 /dev/md1
     vgcreate "${VGNAME}" /dev/md0 /dev/md1
 
-    lvcreate -n LV-XFS -L ${XFS_SIZE}‬%FREE "${VGNAME}"
-    mkfs -t xfs LV-XFS
+    lvcreate -n LV-XFS -L "${XFS_SIZE}" "${VGNAME}"
+    mkfs -t xfs /dev/mapper/${VGNAME}-LV--XFS
 
-    lvcreate -n LV-EXT4 -L ${EXT4_SIZE}‬%FREE "${VGNAME}"
-    mkfs -t ext4 LV-EXT4
+    lvcreate -n LV-EXT4 -L "${EXT4_SIZE}" "${VGNAME}"
+    mkfs -t ext4 /dev/mapper/${VGNAME}-LV--EXT4
 
-    lvcreate -n LV-NTFS -L 100%FREE "${VGNAME}"
-    mkfs -t ntfs LV-NTFS
+    lvcreate -n LV-NTFS -L "${NTFS_SIZE}" "${VGNAME}"
+    mkfs -t ntfs /dev/mapper/${VGNAME}-LV--NTFS
 
     mkdir -p /mnt/xfs-partition /mnt/ext4-partition /mnt/ntfs-partition
-    mount LV-XFS /mnt/xfs-partition
-    mount LV-EXT4 /mnt/ext4-partition
-    mount LV-NTFS /mnt/ntfs-partition
+    mount /dev/mapper/${VGNAME}-LV--XFS /mnt/xfs-partition
+    mount /dev/mapper/${VGNAME}-LV--EXT4 /mnt/ext4-partition
+    mount /dev/mapper/${VGNAME}-LV--NTFS /mnt/ntfs-partition
 
-    mdadm --detail --scan --verbose >> /etc/mdadm/mdadm.conf
-    update-initramfs -u
 fi
+
+mdadm --detail --scan >> /etc/mdadm/mdadm.conf
+update-initramfs -u
