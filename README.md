@@ -188,6 +188,15 @@ update-initramfs -u                                                             
 </target>
 ```
 
+## Résultats setup.sh:
+<img src="img/machine1/lsblk-f.png" alt="lsblk -f">
+<img src="img/machine1/tgtadm-show.png" alt="tgtadm --mode target --op show">
+<img src="img/machine2/lsblk-f.png" alt="lsblk -f">
+<img src="img/machine2/tgtadm-show.png" alt="tgtadm --mode target --op show">
+<img src="img/machine3/lsblk-f.png" alt="lsblk -f">
+<img src="img/machine3/tgtadm-show.png" alt="tgtadm --mode target --op show">
+<img src="img/machine4/lsblk-f.png" alt="lsblk -f">
+
 ## `create_file.sh`
 
 ```bash
@@ -205,11 +214,18 @@ do
 done
 ```
 
-## Résultats:
-<img src="img/machine1/lsblk-f.png" alt="lsblk -f">
-<img src="img/machine1/tgtadm-show.png" alt="tgtadm --mode target --op show">
-<img src="img/machine2/lsblk-f.png" alt="lsblk -f">
-<img src="img/machine2/tgtadm-show.png" alt="tgtadm --mode target --op show">
-<img src="img/machine3/lsblk-f.png" alt="lsblk -f">
-<img src="img/machine3/tgtadm-show.png" alt="tgtadm --mode target --op show">
-<img src="img/machine4/lsblk-f.png" alt="lsblk -f">
+## résultat create_file.sh
+<img src="img/machine4/create-files.png" alt="create-files">
+
+
+## Snapshot LV1:
+<img src="img/machine4/snapshot-rm-files.png" alt="snapshot-rm-files">
+<img src="img/machine4/empty-dir.png" alt="empty-dir">
+<img src="img/machine4/lvmerge.png" alt="lvmerge">
+<img src="img/machine4/restored-files.png" alt="restored-files">
+
+## Simulation de panne disque
+<img src="img/machine3/sdb-faulty.png" alt="sdb-faulty"><br/>
+<img src="img/machine3/sdb-remove.png" alt="sdb-remove"><br/>
+<img src="img/machine3/add-sdf.png" alt="add-sdf"><br/>
+<img src="img/machine3/check-sdf.png" alt="check-sdf">
